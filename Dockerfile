@@ -1,16 +1,15 @@
 FROM python:3.11-slim
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PORT=5000
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PORT=5000
 
-WORKDIR /app/python_backend
+WORKDIR /app
 
-# Copia los archivos desde la carpeta correcta
-COPY ./Trabajo_Grado/python_backend /app/python_backend
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential && rm -rf /var/lib/apt/lists/*
 
-# Instala dependencias
+COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . /app
 
 EXPOSE 5000
 
