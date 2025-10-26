@@ -1,0 +1,26 @@
+# Ignorar cachés y archivos temporales
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# Entornos virtuales
+venv/
+env/
+.venv/
+
+# Archivos ocultos del sistema
+.DS_Store
+Thumbs.db
+
+# Configs locales
+.env
+
+# Modelos grandes (los descargas desde Hugging Face)
+models/*.keras
+models/*.pt
+
+# Solo si NO quieres subir la base de datos
+# (Pero tú sí quieres subirla, así que no incluyas *.db)
+# *.db

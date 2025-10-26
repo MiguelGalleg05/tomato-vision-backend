@@ -162,29 +162,53 @@ QUALITY_WEIGHTS = {
 DEFAULT_CLASS_WEIGHT = 0.5
 
 
-
-
 def initialize_predictors():
     global disease_predictor, quality_predictor
 
     models_dir = os.path.join(BASE_DIR, "models")
+    os.makedirs(models_dir, exist_ok=True)
+
     try:
+        # ------------------------------
+        # 🔹 Modelo de Enfermedades (.keras)
+        # ------------------------------
         disease_path = os.path.join(models_dir, "mymodel_v4.keras")
+        if not os.path.exists(disease_path):
+            print("Descargando modelo de enfermedades desde Hugging Face...")
+            import requests
+            DISEASE_MODEL_URL = "https://huggingface.co/miguelgallego23/tomato-model/resolve/main/mymodel_v4.keras"
+            r = requests.get(DISEASE_MODEL_URL)
+            with open(disease_path, "wb") as f:
+                f.write(r.content)
+            print("✅ Modelo de enfermedades descargado correctamente.")
+
         if os.path.exists(disease_path):
-            # DiseasePredictor espera nombre de archivo relativo a ./models
             disease_predictor = DiseasePredictor("mymodel_v4.keras")
             print(f"Disease model loaded from {disease_path}")
         else:
-            print(f"Warning: disease model not found in {disease_path}")
+            print(f"⚠️ Warning: disease model not found in {disease_path}")
 
+        # ------------------------------
+        # 🔹 Modelo de Calidad (YOLO .pt)
+        # ------------------------------
         quality_path = os.path.join(models_dir, "best.pt")
+        if not os.path.exists(quality_path):
+            print("Descargando modelo de calidad desde Hugging Face...")
+            import requests
+            QUALITY_MODEL_URL = "https://huggingface.co/miguelgallego23/tomato-model/resolve/main/best.pt"
+            r = requests.get(QUALITY_MODEL_URL)
+            with open(quality_path, "wb") as f:
+                f.write(r.content)
+            print("✅ Modelo de calidad descargado correctamente.")
+
         if os.path.exists(quality_path):
             quality_predictor = QualityPredictor(quality_path)
             print(f"Quality model loaded from {quality_path}")
         else:
-            print(f"Warning: quality model not found in {quality_path}")
-    except Exception as exc:  # noqa: BLE001
-        print(f"Error initializing models: {exc}")
+            print(f"⚠️ Warning: quality model not found in {quality_path}")
+
+    except Exception as exc:
+        print(f"❌ Error initializing models: {exc}")
 
 
 def serialize_disease_row(row: sqlite3.Row) -> dict:
