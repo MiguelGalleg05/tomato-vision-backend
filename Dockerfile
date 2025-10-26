@@ -1,16 +1,21 @@
 FROM python:3.11-slim
 
-ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PORT=5000
+# Variables de entorno básicas
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PORT=5000
 
-WORKDIR /app
+# Establece el directorio de trabajo correcto
+WORKDIR /app/python_backend
 
-RUN apt-get update && apt-get install -y --no-install-recommends build-essential && rm -rf /var/lib/apt/lists/*
+# Copia los archivos del backend
+COPY ./python_backend /app/python_backend
 
-COPY requirements.txt /app/requirements.txt
+# Instala dependencias
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . /app
-
+# Expone el puerto
 EXPOSE 5000
 
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
+# Comando para ejecutar Flask
+CMD ["python", "app.py"]
