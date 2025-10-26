@@ -6,10 +6,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# 🔧 Instalar dependencias del sistema necesarias para OpenCV y YOLO
+# 🔧 Instalar dependencias del sistema necesarias para OpenCV, TensorFlow y YOLO
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    libgl1-mesa-glx \
+    libgl1 \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
@@ -23,7 +23,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 📁 Copiar todo el proyecto
 COPY . /app
 
-# 🌐 Exponer puerto Flask
+# 🌐 Exponer el puerto Flask
 EXPOSE 5000
 
 # 🚀 Ejecutar la app
